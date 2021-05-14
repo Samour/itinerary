@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "ES2018",
+    "paths": {
+      "@itinerary/ioc/*": ["ioc/*"]
+    }
+  }
+}

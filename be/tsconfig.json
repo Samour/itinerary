@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src/",
+    "target": "ES2018",
+    "moduleResolution": "node",
+    "paths": {
+      "@itinerary/ioc/*": ["../../shared/ioc/*"]
+    }
+  }
+}
