@@ -1,3 +1,4 @@
-import { Application } from 'Application';
+import { runApplication } from 'Application';
 
-new Application().start();
+// Run in default application context
+runApplication()();

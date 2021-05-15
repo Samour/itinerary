@@ -1,18 +1,12 @@
 import * as express from 'express';
-import { mountRoutes } from './routes';
+import { Bean, bean } from '@itinerary/ioc/bean';
+import { MountRoutesFn, mountRoutes } from './routes';
 
-export interface IApplication {
-  start(): void;
-}
+export const runApplication: Bean<() => void> = bean([mountRoutes])((mountRoutes: MountRoutesFn) => () => {
+  const app = express();
+  app.use(express.json());
 
-export class Application implements IApplication {
+  mountRoutes(app);
 
-  start(): void {
-    const app = express();
-    app.use(express.json());
-
-    mountRoutes()(app);
-
-    app.listen(8080, () => console.log('HTTP listener started'));
-  }
-}
+  app.listen(8080, () => console.log('HTTP listener started'));
+});
