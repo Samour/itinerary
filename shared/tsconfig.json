@@ -3,7 +3,8 @@
     "baseUrl": ".",
     "target": "ES2018",
     "paths": {
-      "@itinerary/ioc/*": ["ioc/*"]
+      "@itinerary/ioc/*": ["ioc/*"],
+      "@itinerary/structures/*": ["structures/*"]
     }
   }
 }

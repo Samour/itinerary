@@ -4,7 +4,8 @@
     "target": "ES2018",
     "moduleResolution": "node",
     "paths": {
-      "@itinerary/ioc/*": ["../../shared/ioc/*"]
+      "@itinerary/ioc/*": ["../../shared/ioc/*"],
+      "@itinerary/structures/*": ["../../shared/structures/*"]
     }
   }
 }

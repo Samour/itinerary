@@ -9,6 +9,7 @@ export class Application implements IApplication {
 
   start(): void {
     const app = express();
+    app.use(express.json());
 
     mountRoutes()(app);
 
