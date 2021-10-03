@@ -5,11 +5,9 @@ import me.aburke.itinerary.dto.create.CreateItineraryRequest
 import me.aburke.itinerary.dto.create.CreateItineraryResponse
 import me.aburke.itinerary.dto.detail.ItineraryDto
 import me.aburke.itinerary.dto.list.ItineraryListDto
-import me.aburke.itinerary.dto.update.UpdateDescriptionRequest
-import me.aburke.itinerary.dto.update.UpdateEndTimeRequest
-import me.aburke.itinerary.dto.update.UpdateNameRequest
-import me.aburke.itinerary.dto.update.UpdateStartTimeRequest
+import me.aburke.itinerary.dto.update.*
 import me.aburke.itinerary.services.ItineraryItemService
+import me.aburke.itinerary.services.ItineraryItemUpdateService
 import me.aburke.itinerary.services.ItineraryService
 import me.aburke.itinerary.services.ItineraryUpdateService
 import org.springframework.web.bind.annotation.*
@@ -20,6 +18,7 @@ class ItineraryController(
     val itineraryUpdateService: ItineraryUpdateService,
     val itineraryService: ItineraryService,
     val itineraryItemService: ItineraryItemService,
+    val itineraryItemUpdateService: ItineraryItemUpdateService,
 ) {
 
     @GetMapping
@@ -97,5 +96,65 @@ class ItineraryController(
         @RequestHeader("User-Id") userId: String
     ): Unit {
         itineraryItemService.deleteItem(id, userId, itemId)
+    }
+
+    @PutMapping("/{id}/items/{itemId}/name")
+    fun updateItineraryItemName(
+        @PathVariable id: String,
+        @PathVariable itemId: String,
+        @RequestBody update: UpdateNameRequest,
+        @RequestHeader("User-Id") userId: String
+    ): Unit {
+        itineraryItemUpdateService.updateName(id, userId, itemId, update)
+    }
+
+    @PutMapping("/{id}/items/{itemId}/description")
+    fun updateItineraryItemDescription(
+        @PathVariable id: String,
+        @PathVariable itemId: String,
+        @RequestBody update: UpdateDescriptionRequest,
+        @RequestHeader("User-Id") userId: String
+    ): Unit {
+        itineraryItemUpdateService.updateDescription(id, userId, itemId, update)
+    }
+
+    @PutMapping("/{id}/items/{itemId}/primaryLocation")
+    fun updateItineraryItemPrimaryLocation(
+        @PathVariable id: String,
+        @PathVariable itemId: String,
+        @RequestBody update: UpdatePrimaryLocationRequest,
+        @RequestHeader("User-Id") userId: String
+    ): Unit {
+        itineraryItemUpdateService.updatePrimaryLocation(id, userId, itemId, update)
+    }
+
+    @PutMapping("/{id}/items/{itemId}/secondaryLocations")
+    fun updateItineraryItemSecondaryLocations(
+        @PathVariable id: String,
+        @PathVariable itemId: String,
+        @RequestBody update: UpdateSecondaryLocationsRequest,
+        @RequestHeader("User-Id") userId: String
+    ): Unit {
+        itineraryItemUpdateService.updateSecondaryLocations(id, userId, itemId, update)
+    }
+
+    @PutMapping("/{id}/items/{itemId}/startTime")
+    fun updateItineraryItemStartTime(
+        @PathVariable id: String,
+        @PathVariable itemId: String,
+        @RequestBody update: UpdateStartTimeRequest,
+        @RequestHeader("User-Id") userId: String
+    ): Unit {
+        itineraryItemUpdateService.updateStartTime(id, userId, itemId, update)
+    }
+
+    @PutMapping("/{id}/items/{itemId}/endTime")
+    fun updateItineraryItemEndTime(
+        @PathVariable id: String,
+        @PathVariable itemId: String,
+        @RequestBody update: UpdateEndTimeRequest,
+        @RequestHeader("User-Id") userId: String
+    ): Unit {
+        itineraryItemUpdateService.updateEndTime(id, userId, itemId, update)
     }
 }

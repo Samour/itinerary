@@ -58,11 +58,6 @@ class ItineraryServiceImpl(
     }
 
     private fun loadItinerary(itineraryId: String, userId: String): Itinerary {
-        val itinerary = itineraryRepository.findByIdAndUserId(itineraryId, userId)
-        if (itinerary == null) {
-            throw NotFoundException()
-        }
-
-        return itinerary
+        return itineraryRepository.findByIdAndUserId(itineraryId, userId) ?: throw NotFoundException()
     }
 }

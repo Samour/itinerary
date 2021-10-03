@@ -3,6 +3,8 @@ package me.aburke.itinerary.services.impl
 import me.aburke.itinerary.converters.ItineraryConverter
 import me.aburke.itinerary.dto.create.CreateItineraryItemRequest
 import me.aburke.itinerary.dto.create.CreateItineraryResponse
+import me.aburke.itinerary.exceptions.NotFoundException
+import me.aburke.itinerary.model.Itinerary
 import me.aburke.itinerary.model.ItineraryItem
 import me.aburke.itinerary.services.ItineraryItemService
 import me.aburke.itinerary.services.ItineraryService
@@ -22,15 +24,8 @@ class ItineraryItemServiceImpl(
     ): CreateItineraryResponse {
         val model = itineraryConverter.createModel(item)
         itineraryService.updateItinerary(itineraryId, userId) {
-            if (model.startTime.isBefore(it.startTime)) {
-                it.startTime = model.startTime
-            }
-            if (model.endTime.isAfter(it.endTime)) {
-                it.endTime = model.endTime
-            }
-
             it.items.add(model)
-            sortItems(it.items)
+            updateTimes(it, model)
         }
 
         return itineraryConverter.createResponse(model)
@@ -42,7 +37,30 @@ class ItineraryItemServiceImpl(
         }
     }
 
-    private fun sortItems(items: MutableList<ItineraryItem>) {
-        items.sortWith(comparing(ItineraryItem::startTime))
+    override fun updateItem(
+        itineraryId: String,
+        userId: String,
+        itemId: String,
+        updatesTime: Boolean,
+        update: (item: ItineraryItem) -> Unit
+    ) {
+        itineraryService.updateItinerary(itineraryId, userId) {
+            val item = it.items.find { i -> i.id == itemId } ?: throw NotFoundException()
+            update(item)
+            if (updatesTime) {
+                updateTimes(it, item)
+            }
+        }
+    }
+
+    private fun updateTimes(itinerary: Itinerary, item: ItineraryItem) {
+        if (item.startTime.isBefore(itinerary.startTime)) {
+            itinerary.startTime = item.startTime
+        }
+        if (item.endTime.isAfter(itinerary.endTime)) {
+            itinerary.endTime = item.endTime
+        }
+
+        itinerary.items.sortWith(comparing(ItineraryItem::startTime))
     }
 }
