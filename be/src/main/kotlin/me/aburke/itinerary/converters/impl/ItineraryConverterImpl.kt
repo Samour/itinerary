@@ -1,6 +1,7 @@
 package me.aburke.itinerary.converters.impl
 
 import me.aburke.itinerary.converters.ItineraryConverter
+import me.aburke.itinerary.dto.create.CreateItineraryItemRequest
 import me.aburke.itinerary.dto.create.CreateItineraryRequest
 import me.aburke.itinerary.dto.create.CreateItineraryResponse
 import me.aburke.itinerary.dto.detail.ItineraryDto
@@ -21,7 +22,7 @@ class ItineraryConverterImpl : ItineraryConverter {
             request.description,
             request.startTime,
             request.endTime,
-            emptyList()
+            mutableListOf()
         )
     }
 
@@ -53,5 +54,22 @@ class ItineraryConverterImpl : ItineraryConverter {
             item.startTime,
             item.endTime
         )
+    }
+
+    override fun createModel(itineraryItem: CreateItineraryItemRequest): ItineraryItem {
+        return ItineraryItem(
+            UUID.randomUUID().toString(),
+            itineraryItem.name,
+            itineraryItem.description,
+            itineraryItem.type,
+            itineraryItem.primaryLocation,
+            itineraryItem.secondaryLocations,
+            itineraryItem.startTime,
+            itineraryItem.endTime
+        )
+    }
+
+    override fun createResponse(itineraryItem: ItineraryItem): CreateItineraryResponse {
+        return CreateItineraryResponse(itineraryItem.id)
     }
 }

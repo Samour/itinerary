@@ -14,5 +14,7 @@ interface ItineraryService {
 
     fun getItinerary(itineraryId: String, userId: String): ItineraryDto
 
+    fun deleteItinerary(itineraryId: String, userId: String): Unit
+
     fun updateItinerary(itineraryId: String, userId: String, update: (itinerary: Itinerary) -> Unit): Unit
 }

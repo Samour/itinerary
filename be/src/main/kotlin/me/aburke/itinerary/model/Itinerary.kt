@@ -11,5 +11,5 @@ data class Itinerary(
     var description: String,
     var startTime: Instant,
     var endTime: Instant,
-    var items: List<ItineraryItem>,
+    var items: MutableList<ItineraryItem>,
 )

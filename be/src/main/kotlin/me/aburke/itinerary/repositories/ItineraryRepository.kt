@@ -17,4 +17,6 @@ interface ItineraryRepository : MongoRepository<Itinerary, String> {
     fun findAllByUserId(userId: String): List<ItinerarySummaryDto>
 
     fun findByIdAndUserId(id: String, userId: String): Itinerary?
+
+    fun deleteByIdAndUserId(id: String, userId: String): Int
 }

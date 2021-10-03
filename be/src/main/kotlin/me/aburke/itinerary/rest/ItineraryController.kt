@@ -1,5 +1,6 @@
 package me.aburke.itinerary.rest
 
+import me.aburke.itinerary.dto.create.CreateItineraryItemRequest
 import me.aburke.itinerary.dto.create.CreateItineraryRequest
 import me.aburke.itinerary.dto.create.CreateItineraryResponse
 import me.aburke.itinerary.dto.detail.ItineraryDto
@@ -8,6 +9,7 @@ import me.aburke.itinerary.dto.update.UpdateDescriptionRequest
 import me.aburke.itinerary.dto.update.UpdateEndTimeRequest
 import me.aburke.itinerary.dto.update.UpdateNameRequest
 import me.aburke.itinerary.dto.update.UpdateStartTimeRequest
+import me.aburke.itinerary.services.ItineraryItemService
 import me.aburke.itinerary.services.ItineraryService
 import me.aburke.itinerary.services.ItineraryUpdateService
 import org.springframework.web.bind.annotation.*
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*
 class ItineraryController(
     val itineraryUpdateService: ItineraryUpdateService,
     val itineraryService: ItineraryService,
+    val itineraryItemService: ItineraryItemService,
 ) {
 
     @GetMapping
@@ -35,6 +38,11 @@ class ItineraryController(
     @GetMapping("/{id}")
     fun getItinerary(@PathVariable id: String, @RequestHeader("User-Id") userId: String): ItineraryDto {
         return itineraryService.getItinerary(id, userId)
+    }
+
+    @DeleteMapping("/{id}")
+    fun deleteItinerary(@PathVariable id: String, @RequestHeader("User-Id") userId: String): Unit {
+        itineraryService.deleteItinerary(id, userId)
     }
 
     @PutMapping("/{id}/name")
@@ -71,5 +79,23 @@ class ItineraryController(
         @RequestHeader("User-Id") userId: String
     ): Unit {
         itineraryUpdateService.updateEndTime(id, userId, update)
+    }
+
+    @PostMapping("/{id}/items")
+    fun createItineraryItem(
+        @PathVariable id: String,
+        @RequestBody item: CreateItineraryItemRequest,
+        @RequestHeader("User-Id") userId: String
+    ): CreateItineraryResponse {
+        return itineraryItemService.createItem(id, userId, item)
+    }
+
+    @DeleteMapping("/{id}/items/{itemId}")
+    fun deleteItineraryItem(
+        @PathVariable id: String,
+        @PathVariable itemId: String,
+        @RequestHeader("User-Id") userId: String
+    ): Unit {
+        itineraryItemService.deleteItem(id, userId, itemId)
     }
 }

@@ -5,6 +5,7 @@ import me.aburke.itinerary.dto.create.CreateItineraryRequest
 import me.aburke.itinerary.dto.create.CreateItineraryResponse
 import me.aburke.itinerary.dto.detail.ItineraryDto
 import me.aburke.itinerary.dto.list.ItineraryListDto
+import me.aburke.itinerary.exceptions.BusinessException
 import me.aburke.itinerary.exceptions.NotFoundException
 import me.aburke.itinerary.model.Itinerary
 import me.aburke.itinerary.repositories.ItineraryRepository
@@ -27,6 +28,10 @@ class ItineraryServiceImpl(
 
     override fun createItinerary(itinerary: CreateItineraryRequest, userId: String): CreateItineraryResponse {
         val model = itineraryConverter.createModel(itinerary, userId)
+        if (!model.startTime.isBefore(model.endTime)) {
+            throw BusinessException("End time must be after start time")
+        }
+
         itineraryRepository.save(model)
 
         return itineraryConverter.createResponse(model)
@@ -34,6 +39,13 @@ class ItineraryServiceImpl(
 
     override fun getItinerary(itineraryId: String, userId: String): ItineraryDto {
         return itineraryConverter.toDto(loadItinerary(itineraryId, userId))
+    }
+
+    override fun deleteItinerary(itineraryId: String, userId: String) {
+        val deletedCount = itineraryRepository.deleteByIdAndUserId(itineraryId, userId)
+        if (deletedCount < 1) {
+            throw NotFoundException()
+        }
     }
 
     override fun updateItinerary(itineraryId: String, userId: String, update: (itinerary: Itinerary) -> Unit) {
