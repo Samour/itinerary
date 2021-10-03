@@ -6,10 +6,10 @@ import java.time.Instant
 @Document
 data class Itinerary(
     val id: String,
-    val userId: String,
-    val name: String,
-    val description: String,
-    val startTime: Instant,
-    val endTime: Instant,
-    val items: List<ItineraryItem>,
+    var userId: String,
+    var name: String,
+    var description: String,
+    var startTime: Instant,
+    var endTime: Instant,
+    var items: List<ItineraryItem>,
 )

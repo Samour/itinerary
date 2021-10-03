@@ -4,11 +4,11 @@ import java.time.Instant
 
 data class ItineraryItem(
     val id: String,
-    val name: String,
-    val description: String,
-    val type: ItineraryItemType,
-    val primaryLocation: Location,
-    val secondaryLocations: List<Location>,
-    val startTime: Instant,
-    val endTime: Instant,
+    var name: String,
+    var description: String,
+    var type: ItineraryItemType,
+    var primaryLocation: Location,
+    var secondaryLocations: List<Location>,
+    var startTime: Instant,
+    var endTime: Instant,
 )

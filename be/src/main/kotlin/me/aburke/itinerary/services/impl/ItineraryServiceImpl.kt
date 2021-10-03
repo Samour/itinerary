@@ -6,6 +6,7 @@ import me.aburke.itinerary.dto.create.CreateItineraryResponse
 import me.aburke.itinerary.dto.detail.ItineraryDto
 import me.aburke.itinerary.dto.list.ItineraryListDto
 import me.aburke.itinerary.exceptions.NotFoundException
+import me.aburke.itinerary.model.Itinerary
 import me.aburke.itinerary.repositories.ItineraryRepository
 import me.aburke.itinerary.services.ItineraryService
 import org.springframework.stereotype.Service
@@ -32,11 +33,24 @@ class ItineraryServiceImpl(
     }
 
     override fun getItinerary(itineraryId: String, userId: String): ItineraryDto {
+        return itineraryConverter.toDto(loadItinerary(itineraryId, userId))
+    }
+
+    override fun updateItinerary(itineraryId: String, userId: String, update: (itinerary: Itinerary) -> Unit) {
+        // NOTE: We should probably be locking the Itinerary record here; especially later on when we do
+        // updates to itinerary items
+        // Not going to spend time on that rn though
+        val itinerary = loadItinerary(itineraryId, userId)
+        update(itinerary)
+        itineraryRepository.save(itinerary)
+    }
+
+    private fun loadItinerary(itineraryId: String, userId: String): Itinerary {
         val itinerary = itineraryRepository.findByIdAndUserId(itineraryId, userId)
         if (itinerary == null) {
             throw NotFoundException()
         }
 
-        return itineraryConverter.toDto(itinerary)
+        return itinerary
     }
 }
