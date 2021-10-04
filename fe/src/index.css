@@ -12,10 +12,24 @@ code {
     monospace;
 }
 
-.fullWidth {
-  width: 100%;
+.screen-container {
+  padding-top: 30px;
 }
 
-#ItinerariesList-Container {
-  padding-top: 30px;
+.secondary-text {
+  color: #666666;
+}
+
+.text-align-right {
+  text-align: right;
+}
+
+#ItinerariesList-CreateButton {
+  text-align: right;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.buttons-row button:not(:first-child) {
+  margin-left: 25px;
 }

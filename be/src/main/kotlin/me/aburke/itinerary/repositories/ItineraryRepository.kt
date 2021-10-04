@@ -7,13 +7,16 @@ import org.springframework.data.mongodb.repository.Query
 
 interface ItineraryRepository : MongoRepository<Itinerary, String> {
 
-    @Query(fields = "{" +
-            "'id': 1," +
-            "'name': 1," +
-            "'description': 1," +
-            "'startTime': 1," +
-            "'endTime': 1" +
-            "}")
+    @Query(
+        fields = "{" +
+                "'id': 1," +
+                "'name': 1," +
+                "'description': 1," +
+                "'startTime': 1," +
+                "'endTime': 1" +
+                "}",
+        sort = "{ startTime: 1 }"
+    )
     fun findAllByUserId(userId: String): List<ItinerarySummaryDto>
 
     fun findByIdAndUserId(id: String, userId: String): Itinerary?
