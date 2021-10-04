@@ -1,6 +1,7 @@
 import MutationType from "../MutationType";
+import IMutation from "../IMutation";
 
-export interface CreateItineraryNameInvalidMutation {
+export interface CreateItineraryNameInvalidMutation extends IMutation {
     type: MutationType.CREATE_ITINERARY_NAME_INVALID;
     errorMessage: string;
 }

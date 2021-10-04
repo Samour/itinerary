@@ -1,7 +1,8 @@
-import MutationType from "../MutationType";
 import {Dayjs} from "dayjs";
+import MutationType from "../MutationType";
+import IMutation from "../IMutation";
 
-export interface CreateItinerarySetStartTimeMutation {
+export interface CreateItinerarySetStartTimeMutation extends IMutation {
     type: MutationType.CREATE_ITINERARY_SET_START_DATE;
     startTime: Dayjs | null;
 }

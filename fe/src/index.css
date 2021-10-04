@@ -33,3 +33,20 @@ code {
 .buttons-row button:not(:first-child) {
   margin-left: 25px;
 }
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+}
+
+.modal-content .modal-text {
+  text-align: center;
+  margin: 20px;
+}
+
+.modal-content .modal-buttons {
+  text-align: center;
+}

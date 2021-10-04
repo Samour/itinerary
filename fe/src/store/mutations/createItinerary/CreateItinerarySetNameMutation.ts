@@ -1,6 +1,7 @@
 import MutationType from "../MutationType";
+import IMutation from "../IMutation";
 
-export interface CreateItinerarySetNameMutation {
+export interface CreateItinerarySetNameMutation extends IMutation {
     type: MutationType.CREATE_ITINERARY_SET_NAME;
     name: string | null;
 }

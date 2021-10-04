@@ -1,6 +1,7 @@
 import MutationType from "../MutationType";
+import IMutation from "../IMutation";
 
-export interface CreateItineraryStartTimeInvalidMutation {
+export interface CreateItineraryStartTimeInvalidMutation extends IMutation {
     type: MutationType.CREATE_ITINERARY_START_DATE_INVALID;
     errorMessage: string;
 }

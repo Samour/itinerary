@@ -2,6 +2,8 @@ export interface IHttpService {
     get<T>(url: string): Promise<T>;
 
     post<B, T>(url: string, body: B): Promise<T>;
+
+    delete<T>(url: string): Promise<T>;
 }
 
 const BASE_URL = 'http://localhost:8080';
@@ -27,6 +29,10 @@ class HttpService implements IHttpService {
         });
     }
 
+    async delete<T>(url: string): Promise<T> {
+        return this.makeCall('DELETE', url);
+    }
+
     private async makeCall<T>(method: string, url: string, params: CallParams = {}): Promise<T> {
         const fullUrl: string = `${BASE_URL}${url}`;
         const response = await fetch(fullUrl, {
@@ -38,7 +44,11 @@ class HttpService implements IHttpService {
             },
         });
 
-        return response.json();
+        try {
+            return await response.json();
+        } catch (e) {
+            return null as any;
+        }
     }
 }
 

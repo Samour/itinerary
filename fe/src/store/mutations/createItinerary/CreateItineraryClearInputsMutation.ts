@@ -1,6 +1,7 @@
 import MutationType from "../MutationType";
+import IMutation from "../IMutation";
 
-export interface CreateItineraryClearInputsMutation {
+export interface CreateItineraryClearInputsMutation extends IMutation {
     type: MutationType.CREATE_ITINERARY_CLEAR_INPUTS;
 }
 

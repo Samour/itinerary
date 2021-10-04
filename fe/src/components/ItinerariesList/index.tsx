@@ -7,6 +7,7 @@ import {IItineraryService, useItineraryService} from "src/services/ItineraryServ
 import ItinerarySummary from "./ItinerarySummary";
 
 import CreateItineraryButton from "./CreateItineraryButton";
+import DeleteConfirmation from "./DeleteConfirmation";
 
 const selector = (state: AppState): ItinerarySummaryDto[] => state.itinerariesList.itineraries;
 
@@ -39,6 +40,7 @@ const ItinerariesList = (): JSX.Element => {
                     </Grid>
                 </Grid>
             </Grid>
+            <DeleteConfirmation/>
         </Container>
     );
 };
