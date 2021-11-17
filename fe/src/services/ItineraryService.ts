@@ -1,4 +1,4 @@
-import {ItineraryListDto, ItinerarySummaryDto} from "../models/ItineraryDto";
+import {CreateItineraryRequest, ItineraryListDto, ItinerarySummaryDto} from "../models/ItineraryDto";
 import {IHttpService, useHttpService} from "./HttpService";
 import {Dispatch} from "redux";
 import {useDispatch} from "react-redux";
@@ -8,6 +8,8 @@ import {closeItineraryDeleteModalMutation} from "src/store/mutations/itineraries
 import {itineraryDeleteInProgressMutation} from "src/store/mutations/itinerariesList/ItineraryDeleteInProgressMutation";
 
 export interface IItineraryService {
+    createItinerary(itinerary: CreateItineraryRequest): Promise<void>;
+
     loadItinerariesList(): void;
 
     openDeleteModal(itinerary: ItinerarySummaryDto): void;
@@ -21,6 +23,10 @@ class ItineraryService implements IItineraryService {
 
     constructor(private readonly httpService: IHttpService,
                 private readonly dispatch: Dispatch) {
+    }
+
+    async createItinerary(itinerary: CreateItineraryRequest): Promise<void> {
+        await this.httpService.post<CreateItineraryRequest, void>('/itineraries', itinerary);
     }
 
     loadItinerariesList(): void {
