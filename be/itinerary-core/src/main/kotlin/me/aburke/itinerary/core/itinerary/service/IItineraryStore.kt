@@ -9,5 +9,7 @@ interface IItineraryStore {
 
     fun storeItinerary(itinerary: Itinerary)
 
+    fun loadItinerary(userId: String, itineraryId: String): Itinerary?
+
     fun deleteItinerary(userId: String, itineraryId: String)
 }

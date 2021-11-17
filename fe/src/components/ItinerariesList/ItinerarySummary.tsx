@@ -4,6 +4,8 @@ import {Delete, Edit} from "@mui/icons-material";
 import {ItinerarySummaryDto} from "src/models/ItineraryDto";
 import TimeDisplay from "src/components/shared/TimeDisplay";
 import {useItineraryService} from "src/services/ItineraryService";
+import {RouteLocations} from "src/models/RouteLocations";
+import {useNavigateToHandler} from "src/navigation";
 
 interface Props {
     itinerary: ItinerarySummaryDto;
@@ -11,6 +13,9 @@ interface Props {
 
 const ItinerarySummary = ({itinerary}: Props): JSX.Element => {
     const itineraryService = useItineraryService();
+
+    const detailLocation = `${RouteLocations.ITINERARY_DETAIL}/${itinerary.id}`;
+    const navigateToDetail = useNavigateToHandler(detailLocation)
     const openDeleteModal = () => itineraryService.openDeleteModal(itinerary);
 
     return (
@@ -26,7 +31,7 @@ const ItinerarySummary = ({itinerary}: Props): JSX.Element => {
                         <TimeDisplay time={itinerary.endTime}/>
                     </Grid>
                     <Grid item xs={3} className='text-align-right buttons-row'>
-                        <IconButton>
+                        <IconButton href={detailLocation} onClick={navigateToDetail}>
                             <Edit/>
                         </IconButton>
                         <IconButton color='error' onClick={openDeleteModal}>

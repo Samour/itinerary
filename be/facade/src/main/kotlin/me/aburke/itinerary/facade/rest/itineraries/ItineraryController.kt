@@ -43,6 +43,35 @@ class ItineraryController(private val itineraryService: ItineraryService) {
         }
     }
 
+    @GetMapping("/{id}")
+    fun getItinerary(
+        @RequestHeader("User-Id") userId: String,
+        @PathVariable id: String,
+    ): ItineraryDto {
+        return itineraryService.loadItinerary(userId, id)
+            .let {
+                ItineraryDto(
+                    id = it.id,
+                    name = it.name,
+                    description = it.description,
+                    startTime = it.startTime,
+                    endTime = it.endTime,
+                    items = it.items.map { item ->
+                        ItineraryItemDto(
+                            id = item.id,
+                            name = item.name,
+                            description = item.description,
+                            type = item.type,
+                            primaryLocation = item.primaryLocation,
+                            secondaryLocations = item.secondaryLocations,
+                            startTime = item.startTime,
+                            endTime = item.endTime
+                        )
+                    }
+                )
+            }
+    }
+
     @DeleteMapping("/{id}")
     fun deleteItinerary(
         @RequestHeader("User-Id") userId: String,

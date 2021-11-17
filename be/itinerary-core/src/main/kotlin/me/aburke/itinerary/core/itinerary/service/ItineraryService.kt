@@ -1,6 +1,7 @@
 package me.aburke.itinerary.core.itinerary.service
 
 import me.aburke.itinerary.core.exceptions.BusinessException
+import me.aburke.itinerary.core.exceptions.NotFoundException
 import me.aburke.itinerary.core.itinerary.Itinerary
 import me.aburke.itinerary.core.itinerary.ItinerarySummary
 import java.util.*
@@ -27,6 +28,9 @@ class ItineraryService(private val itineraryStore: IItineraryStore) {
 
         return itinerary;
     }
+
+    fun loadItinerary(userId: String, itineraryId: String): Itinerary =
+        itineraryStore.loadItinerary(userId, itineraryId) ?: throw NotFoundException()
 
     fun deleteItinerary(userId: String, itineraryId: String) {
         itineraryStore.deleteItinerary(userId, itineraryId)

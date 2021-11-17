@@ -1,16 +1,21 @@
-import {CreateItineraryRequest, ItineraryListDto, ItinerarySummaryDto} from "../models/ItineraryDto";
+import {CreateItineraryRequest, ItineraryDto, ItineraryListDto, ItinerarySummaryDto} from "../models/ItineraryDto";
 import {IHttpService, useHttpService} from "./HttpService";
-import {Dispatch} from "redux";
-import {useDispatch} from "react-redux";
+import {Store} from "redux";
+import {useStore} from "react-redux";
 import {setItinerariesListSummariesMutation} from "src/store/mutations/itinerariesList/SetItinerariesListSummariesMutation";
 import {openItineraryDeleteModalMutation} from "src/store/mutations/itinerariesList/OpenItineraryDeleteModalMutation";
 import {closeItineraryDeleteModalMutation} from "src/store/mutations/itinerariesList/CloseItineraryDeleteModalMutation";
 import {itineraryDeleteInProgressMutation} from "src/store/mutations/itinerariesList/ItineraryDeleteInProgressMutation";
+import {AppState} from "../store/models/AppState";
+import {itineraryDetailLoadingMutation} from "../store/mutations/itineraryDetail/ItineraryDetailLoadingMutation";
+import {setItineraryDetailMutation} from "../store/mutations/itineraryDetail/SetItineraryDetailMutation";
 
 export interface IItineraryService {
     createItinerary(itinerary: CreateItineraryRequest): Promise<void>;
 
     loadItinerariesList(): void;
+
+    loadItineraryDetails(itineraryId: String): void;
 
     openDeleteModal(itinerary: ItinerarySummaryDto): void;
 
@@ -22,7 +27,7 @@ export interface IItineraryService {
 class ItineraryService implements IItineraryService {
 
     constructor(private readonly httpService: IHttpService,
-                private readonly dispatch: Dispatch) {
+                private readonly store: Store<AppState>) {
     }
 
     async createItinerary(itinerary: CreateItineraryRequest): Promise<void> {
@@ -32,20 +37,31 @@ class ItineraryService implements IItineraryService {
     loadItinerariesList(): void {
         this.httpService.get<ItineraryListDto>('/itineraries')
             .then(({itineraries}) => setItinerariesListSummariesMutation(itineraries))
-            .then((mutation) => this.dispatch(mutation))
+            .then((mutation) => this.store.dispatch(mutation))
+            .catch(console.error);
+    }
+
+    loadItineraryDetails(itineraryId: String, invalidateCache: boolean = false) {
+        if (this.store.getState().itineraryDetail.itinerary?.id === itineraryId && !invalidateCache) {
+            return;
+        }
+        this.store.dispatch(itineraryDetailLoadingMutation());
+        this.httpService.get<ItineraryDto>(`/itineraries/${itineraryId}`)
+            .then((itinerary) => setItineraryDetailMutation(itinerary))
+            .then((mutation) => this.store.dispatch(mutation))
             .catch(console.error);
     }
 
     openDeleteModal(itinerary: ItinerarySummaryDto): void {
-        this.dispatch(openItineraryDeleteModalMutation(itinerary));
+        this.store.dispatch(openItineraryDeleteModalMutation(itinerary));
     }
 
     closeDeleteModal(): void {
-        this.dispatch(closeItineraryDeleteModalMutation());
+        this.store.dispatch(closeItineraryDeleteModalMutation());
     }
 
     confirmItineraryDelete(itineraryId: string): void {
-        this.dispatch(itineraryDeleteInProgressMutation(true));
+        this.store.dispatch(itineraryDeleteInProgressMutation(true));
         this.httpService.delete(`/itineraries/${itineraryId}`)
             .then(() => this.closeDeleteModal())
             .then(() => this.loadItinerariesList())
@@ -55,7 +71,7 @@ class ItineraryService implements IItineraryService {
 
 export const useItineraryService = (): IItineraryService => {
     const httpService = useHttpService();
-    const dispatch = useDispatch();
+    const store = useStore<AppState>();
 
-    return new ItineraryService(httpService, dispatch);
+    return new ItineraryService(httpService, store);
 };

@@ -17,9 +17,11 @@ interface MongoItineraryRepository : MongoRepository<Itinerary, String> {
                 endTime: 1
             }
         """,
-        sort = "{ startTime: 1 }"
+        sort = "{ startTime: 1, endTime: 1 }"
     )
     fun findAllByUserId(userId: String): List<ItinerarySummary>
+
+    fun findByIdAndUserId(id: String, userId: String): Itinerary?
 
     fun deleteByIdAndUserId(id: String, userId: String)
 }

@@ -16,6 +16,9 @@ class MongoItineraryStore(private val mongoItineraryRepository: MongoItineraryRe
         mongoItineraryRepository.save(itinerary)
     }
 
+    override fun loadItinerary(userId: String, itineraryId: String): Itinerary? =
+        mongoItineraryRepository.findByIdAndUserId(itineraryId, userId)
+
     override fun deleteItinerary(userId: String, itineraryId: String) {
         mongoItineraryRepository.deleteByIdAndUserId(itineraryId, userId)
     }
