@@ -1,5 +1,6 @@
 package me.aburke.itinerary.facade.rest.itineraries
 
+import me.aburke.itinerary.core.context.RequestContext
 import me.aburke.itinerary.core.itinerary.service.CreateItineraryDetails
 import me.aburke.itinerary.core.itinerary.service.ItineraryService
 import org.springframework.web.bind.annotation.*
@@ -9,9 +10,9 @@ import org.springframework.web.bind.annotation.*
 class ItineraryController(private val itineraryService: ItineraryService) {
 
     @GetMapping
-    fun listItineraries(@RequestHeader("User-Id") userId: String): ItineraryListDto {
+    fun listItineraries(@RequestAttribute requestContext: RequestContext): ItineraryListDto {
         return ItineraryListDto(
-            itineraries = itineraryService.listItineraries(userId)
+            itineraries = itineraryService.listItineraries(requestContext)
                 .map {
                     ItinerarySummaryDto(
                         id = it.id,
@@ -26,11 +27,11 @@ class ItineraryController(private val itineraryService: ItineraryService) {
 
     @PostMapping
     fun createItinerary(
-        @RequestHeader("User-Id") userId: String,
+        @RequestAttribute requestContext: RequestContext,
         @RequestBody itinerary: CreateItineraryRequest,
     ): CreateItineraryResponse {
         return itineraryService.createItinerary(
-            userId, CreateItineraryDetails(
+            requestContext, CreateItineraryDetails(
                 name = itinerary.name,
                 description = itinerary.description,
                 startTime = itinerary.startTime,
@@ -45,10 +46,10 @@ class ItineraryController(private val itineraryService: ItineraryService) {
 
     @GetMapping("/{id}")
     fun getItinerary(
-        @RequestHeader("User-Id") userId: String,
+        @RequestAttribute requestContext: RequestContext,
         @PathVariable id: String,
     ): ItineraryDto {
-        return itineraryService.loadItinerary(userId, id)
+        return itineraryService.loadItinerary(requestContext, id)
             .let {
                 ItineraryDto(
                     id = it.id,
@@ -74,9 +75,9 @@ class ItineraryController(private val itineraryService: ItineraryService) {
 
     @DeleteMapping("/{id}")
     fun deleteItinerary(
-        @RequestHeader("User-Id") userId: String,
+        @RequestAttribute requestContext: RequestContext,
         @PathVariable id: String,
     ) {
-        itineraryService.deleteItinerary(userId, id)
+        itineraryService.deleteItinerary(requestContext, id)
     }
 }

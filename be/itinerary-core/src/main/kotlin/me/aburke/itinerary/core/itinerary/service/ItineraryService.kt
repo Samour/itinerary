@@ -1,5 +1,6 @@
 package me.aburke.itinerary.core.itinerary.service
 
+import me.aburke.itinerary.core.context.RequestContext
 import me.aburke.itinerary.core.exceptions.BusinessException
 import me.aburke.itinerary.core.exceptions.NotFoundException
 import me.aburke.itinerary.core.itinerary.Itinerary
@@ -8,12 +9,13 @@ import java.util.*
 
 class ItineraryService(private val itineraryStore: IItineraryStore) {
 
-    fun listItineraries(userId: String): List<ItinerarySummary> = itineraryStore.getAllByUserId(userId);
+    fun listItineraries(requestContext: RequestContext): List<ItinerarySummary> =
+        itineraryStore.getAllByUserId(requestContext.userContext.userId);
 
-    fun createItinerary(userId: String, itineraryDetails: CreateItineraryDetails): Itinerary {
+    fun createItinerary(requestContext: RequestContext, itineraryDetails: CreateItineraryDetails): Itinerary {
         val itinerary = Itinerary(
             id = UUID.randomUUID().toString(),
-            userId = userId,
+            userId = requestContext.userContext.userId,
             name = itineraryDetails.name,
             description = itineraryDetails.description,
             startTime = itineraryDetails.startTime,
@@ -29,10 +31,10 @@ class ItineraryService(private val itineraryStore: IItineraryStore) {
         return itinerary;
     }
 
-    fun loadItinerary(userId: String, itineraryId: String): Itinerary =
-        itineraryStore.loadItinerary(userId, itineraryId) ?: throw NotFoundException()
+    fun loadItinerary(requestContext: RequestContext, itineraryId: String): Itinerary =
+        itineraryStore.loadItinerary(requestContext.userContext.userId, itineraryId) ?: throw NotFoundException()
 
-    fun deleteItinerary(userId: String, itineraryId: String) {
-        itineraryStore.deleteItinerary(userId, itineraryId)
+    fun deleteItinerary(requestContext: RequestContext, itineraryId: String) {
+        itineraryStore.deleteItinerary(requestContext.userContext.userId, itineraryId)
     }
 }
